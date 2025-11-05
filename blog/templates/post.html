@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+    <title>My Blog</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4A148C;
+        }
+
+        h2 {
+            text-align: center;
+            color: #6A1B9A;
+            margin-bottom: 30px;
+        }
+
+        hr {
+            width: 60%;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+        }
+
+        .post {
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .post h3 {
+            color: #3F51B5;
+            margin-bottom: 10px;
+        }
+
+        .post h3 a {
+            text-decoration: none;
+            color: #3F51B5;
+        }
+
+        .post h3 a:hover {
+            color: #1A237E;
+        }
+
+        .post img {
+            display: block;
+            margin: 15px auto;
+            border-radius: 8px;
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .post-date {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        .post-summary {
+            font-size: 1.05em;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        footer {
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Blog</h1>
+    <h2>Latest Posts</h2>
+    <hr/>
+
+    {% for post in post.all %}
+    <div class="post">
+        <h3><a href="{% url 'detail' post.id %}">{{ post.title }}</a></h3>
+        <div class="post-date">{{ post.public_date }}</div>
+        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+        <p class="post-summary">{{ post.summary }}</p>
+    </div>
+    {% endfor %}
+
+    <footer>
+        &copy; {{ now|date:"Y" }} My Blog. All rights reserved.
+    </footer>
+
+</body>
+</html>
