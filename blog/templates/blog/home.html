@@ -1,52 +1,105 @@
+{% extends 'blog/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>My Blog</title>
-    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
-</head>
 
-<body>
-
-<nav class="navbar">
-    <h2>MyBlog</h2>
-
-    <div class="nav-actions">
-        {% if user.is_authenticated %}
-            <span class="nav-user">Hello, {{ user.username }}</span>
-
-            <!-- ✅ CORRECT LOGOUT (POST, Django 5 safe) -->
-            <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
-
-            <a href="{% url 'create_post' %}">New Post</a>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-        {% endif %}
-    </div>
-</nav>
+{% block content %}
 
 <div class="container">
+
+  <!-- 🔍 SEARCH -->
+  <form method="get" class="search-bar">
+    <input
+      type="text"
+      name="q"
+      placeholder="Search posts"
+      value="{{ request.GET.q }}"
+    />
+    <button type="submit">Search</button>
+  </form>
+
+  <!-- ✅ POSTS -->
+  <div class="post-list">
 
     {% for post in posts %}
     <div class="post-card">
 
-        <h2>{{ post.title }}</h2>
+      <!-- TITLE -->
+      <h2 class="post-title">{{ post.title }}</h2>
 
-        {% if post.image %}
-            <img src="{{ post.image.url }}" class="post-image">
+      <!-- AUTHOR + DATE -->
+      <p class="post-meta">
+        by
+        <a href="{% url 'profile' post.author.username %}">
+          {{ post.author.username }}
+        </a>
+        · {{ post.created_at|date:"M d, Y" }}
+      </p>
+
+      <!-- IMAGE -->
+      {% if post.image %}
+        <img src="{{ post.image.url }}" class="post-image" alt="Post image">
+      {% endif %}
+
+      <!-- CONTENT -->
+      <p class="post-content">
+        {{ post.content|truncatechars:250 }}
+      </p>
+
+      <!-- ✅ FOOTER ACTION BAR -->
+      <div class="post-footer">
+
+        <!-- ❤️ LIKE (LEFT) -->
+        <form method="post" action="{% url 'like_post' post.id %}">
+          {% csrf_token %}
+          <button type="submit" class="like-btn">
+            ❤️ {{ post.likes.count }}
+          </button>
+        </form>
+
+        <!-- ✏️ EDIT + 🗑️ DELETE (RIGHT) -->
+        {% if user == post.author %}
+        <div class="post-actions">
+
+          <a href="{% url 'edit_post' post.id %}" class="edit-btn">
+            Edit
+          </a>
+
+          <form method="post" action="{% url 'delete_post' post.id %}">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="delete-btn"
+              onclick="return confirm('Delete this post?');">
+              Delete
+            </button>
+          </form>
+
+        </div>
         {% endif %}
 
-        <p>{{ post.content }}</p>
+      </div>
 
     </div>
     {% empty %}
-        <p>No posts found.</p>
+      <p class="no-posts">No posts found.</p>
     {% endfor %}
+
+  </div>
+
+  <!-- 📄 PAGINATION -->
+  {% if posts.has_other_pages %}
+  <div class="pagination">
+    {% if posts.has_previous %}
+      <a href="?page={{ posts.previous_page_number }}">&laquo;</a>
+    {% endif %}
+
+    <span>Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+
+    {% if posts.has_next %}
+      <a href="?page={{ posts.next_page_number }}">&raquo;</a>
+    {% endif %}
+  </div>
+  {% endif %}
 
 </div>
 
-</body>
-</html>
+{% endblock %}
