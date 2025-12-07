@@ -1,0 +1,308 @@
+/* ---------- CSS RESET ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- ROOT VARIABLES ---------- */
+:root {
+    --bg: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --border: #e5e7eb;
+}
+
+/* ---------- BASE ---------- */
+body {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    line-height: 1.7;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary);
+}
+
+.container {
+    width: 92%;
+    max-width: 900px;
+    margin: 40px auto;
+}
+
+/* ---------- NAVBAR ---------- */
+.navbar {
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+}
+
+.navbar h2 {
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.navbar a {
+    margin-left: 20px;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.navbar a:hover {
+    color: var(--primary);
+}
+
+/* ---------- FILTER BAR ---------- */
+.filter-form {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.filter-form input,
+.filter-form select {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: white;
+    font-size: 0.95rem;
+}
+
+.filter-form button {
+    padding: 10px 18px;
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filter-form button:hover {
+    background: var(--primary-hover);
+}
+
+/* ---------- POST CARD ---------- */
+.post-card {
+    background: var(--card-bg);
+    padding: 28px;
+    border-radius: 16px;
+    margin-bottom: 26px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 45px rgba(0,0,0,0.08);
+}
+
+.post-card h2 {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+}
+
+.post-card p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* ---------- POST IMAGE ---------- */
+.post-image {
+    width: 100%;
+    border-radius: 14px;
+    margin: 18px 0;
+    object-fit: cover;
+}
+
+/* ---------- READ MORE ---------- */
+details summary {
+    cursor: pointer;
+    color: var(--primary);
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+/* ---------- PAGINATION ---------- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 35px;
+}
+
+.pagination a {
+    padding: 8px 14px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-weight: 500;
+}
+
+.pagination span {
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
+/* ---------- FORMS ---------- */
+form {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    font-size: 1rem;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* ---------- BUTTON ---------- */
+button {
+    display: inline-block;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 14px;
+    background: var(--primary);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--primary-hover);
+}
+
+/* ---------- LOGIN PAGE ---------- */
+.auth-title {
+    text-align: center;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+/* ---------- FOOTER ---------- */
+.footer {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-muted);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 600px) {
+    .navbar {
+        padding: 16px 20px;
+    }
+
+    .post-card {
+        padding: 22px;
+    }
+}
+
+/* ========== AUTH PAGES (LOGIN & CREATE POST) ========== */
+
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 35px;
+    border-radius: 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    animation: fadeUp 0.4s ease;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.auth-title {
+    text-align: center;
+    font-size: 1.7rem;
+    margin-bottom: 25px;
+}
+
+.auth-card form p {
+    margin-bottom: 14px;
+}
+
+.auth-card input,
+.auth-card textarea {
+    width: 100%;
+    padding: 13px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    font-size: 1rem;
+}
+
+.auth-card input:focus,
+.auth-card textarea:focus {
+    outline: none;
+    border-color: #4f46e5;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    background: #4f46e5;
+    border-radius: 14px;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #4338ca;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 18px;
+    color: #64748b;
+}
+
+.auth-footer a {
+    color: #4f46e5;
+    font-weight: 500;
+}

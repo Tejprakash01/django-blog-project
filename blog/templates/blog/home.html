@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Blog</title>
+    <link rel="stylesheet" href="{% static 'blog/style.css' %}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <h2>MyBlog</h2>
+
+    <div class="nav-actions">
+        {% if user.is_authenticated %}
+            <span class="nav-user">Hello, {{ user.username }}</span>
+
+            <!-- ✅ CORRECT LOGOUT (POST, Django 5 safe) -->
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+
+            <a href="{% url 'create_post' %}">New Post</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="container">
+
+    {% for post in posts %}
+    <div class="post-card">
+
+        <h2>{{ post.title }}</h2>
+
+        {% if post.image %}
+            <img src="{{ post.image.url }}" class="post-image">
+        {% endif %}
+
+        <p>{{ post.content }}</p>
+
+    </div>
+    {% empty %}
+        <p>No posts found.</p>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
