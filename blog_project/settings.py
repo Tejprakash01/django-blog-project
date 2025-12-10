@@ -56,13 +56,6 @@ TEMPLATES = [
     },
 ]
 
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.environ["ddxrfohea"],
-    "API_KEY": os.environ["818694789881881"],
-    "API_SECRET": os.environ["FbExOzkaS6aSIuWF0g6hs-_GPvo"],
-}
-
-
 WSGI_APPLICATION = "blog_project.wsgi.application"
 
 DATABASES = {
