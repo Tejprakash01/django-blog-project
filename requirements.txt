@@ -1,5 +1,7 @@
 Django>=4.2,<5.0
 djangorestframework>=3.14
-gunicorn>=21.2
-whitenoise>=6.6
-Pillow>=10.0,<11
+gunicorn
+whitenoise
+Pillow
+cloudinary
+django-cloudinary-storage

@@ -18,6 +18,9 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     "rest_framework",
     "api",
+
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +55,13 @@ TEMPLATES = [
     },
 ]
 
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.environ["ddxrfohea"],
+    "API_KEY": os.environ["818694789881881"],
+    "API_SECRET": os.environ["FbExOzkaS6aSIuWF0g6hs-_GPvo"],
+}
+
+
 WSGI_APPLICATION = "blog_project.wsgi.application"
 
 DATABASES = {
@@ -69,9 +79,6 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Login / logout redirects
@@ -82,3 +89,11 @@ LOGOUT_REDIRECT_URL = "login"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ALLOWED_HOSTS = ["*"]
 DEBUG = False
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
