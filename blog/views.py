@@ -5,13 +5,26 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Post, Comment, Profile
 from .forms import PostForm, CommentForm, ProfileForm
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.shortcuts import redirect
 from .forms import PostForm
+from django.contrib.auth import login
+from .forms import RegisterForm
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect("home")
+
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)   # ✅ auto login
+            return redirect("home")
+    else:
+        form = RegisterForm()
+
+    return render(request, "blog/register.html", {"form": form})
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
