@@ -1,167 +1,181 @@
-📝 Django Blog Project (API + UI)
+# 📝 Django Blog Project
 
-A modern Django Blog Application that combines Django REST Framework (API) with Django Templates (UI).
-Includes authentication, CRUD operations, likes, dark mode UI, and user profiles.
+A full-stack **Django Blog Application** with authentication, image uploads, REST API support, dark mode UI, and production deployment on **Render** using **Cloudinary** for media storage.
 
-🚀 Features
-✅ Authentication
+🔗 **Live Demo**: https://django-blog-project-pyl.onrender.com
 
-User signup / login / logout
+---
 
-Protected routes
+## 🚀 Features
 
-Profile pages
+### ✅ Core Functionality
+- User registration & login
+- Create, edit & delete blog posts
+- Image upload support (Cloudinary)
+- User profile page
+- Admin panel
+- Search posts
+- Like system
+- Authentication-protected routes
 
-✅ Blog System
+### 🎨 UI
+- Clean & modern UI
+- Dark mode toggle
+- Responsive design
 
-Create, edit, delete posts
+### ⚙️ Backend
+- Django (MTV architecture)
+- Django REST Framework (API ready)
+- Media handling with Cloudinary
+- Secure environment variable usage
 
-Upload post images
+### 🚀 Deployment
+- Deployed on **Render**
+- Production-ready settings
+- Gunicorn + WhiteNoise
+- Static & media files handled correctly
 
-View posts by author
+---
 
-Pagination support
+## 🛠️ Tech Stack
 
-✅ Likes System
+**Backend**
+- Python 3.12
+- Django 4.2
+- Django REST Framework
+- Gunicorn
 
-Like / Unlike posts
+**Frontend**
+- HTML5
+- CSS3
+- JavaScript
 
-Like count updates dynamically (toggle)
+**Storage & Deployment**
+- Cloudinary (media storage)
+- Render (hosting)
+- SQLite (development DB)
 
-One like per user per post
+---
 
-✅ UI & UX
+## 📂 Project Structure
 
-Clean modern UI
-
-Dark mode support 🌙
-
-Responsive layout (mobile friendly)
-
-Centralized CSS styling
-
-✅ API Support
-
-REST API for posts and likes
-
-Django REST Framework used
-
-Can be consumed by frontend apps later
-
-🏗 Project Structure
 django_blog_api_project/
 │
-├── api/                     # REST API app
-│   ├── serializers.py
-│   ├── views.py
-│   └── urls.py
+├── api/ # REST API
+├── blog/ # Blog app
+│ ├── models.py
+│ ├── views.py
+│ ├── forms.py
+│ ├── urls.py
 │
-├── blog/                    # Main blog app
-│   ├── models.py
-│   ├── views.py
-│   ├── urls.py
-│   ├── forms.py
-│   ├── signals.py
-│   ├── templates/blog/
-│   │   ├── base.html
-│   │   ├── home.html
-│   │   ├── post_detail.html
-│   │   ├── create_post.html
-│   │   ├── edit_post.html
-│   │   ├── profile.html
-│   │   └── login.html
-│   └── static/blog/
-│       └── style.css
+├── blog_project/ # Project settings
+│ ├── settings.py
+│ ├── urls.py
+│ ├── wsgi.py
 │
-├── blog_project/
-│   ├── settings.py
-│   ├── urls.py
-│   ├── asgi.py
-│   └── wsgi.py
+├── static/ # CSS & static files
+├── templates/ # HTML templates
+├── media/ # Local uploads (dev only)
 │
-├── media/                   # Uploaded images
-├── staticfiles/             # Collected static files
-├── db.sqlite3
+├── requirements.txt
+├── runtime.txt
 ├── manage.py
 └── README.md
+---
 
-🛠 Tech Stack
+## ⚙️ Environment Variables
 
-Backend: Django, Django REST Framework
+Set the following environment variables in **Render** (or `.env` locally):
 
-Frontend: Django Templates, HTML, CSS
 
-Database: SQLite (can be swapped with PostgreSQL)
+---
 
-Auth: Django Auth System
+## 📦 Installation (Local Setup)
 
-⚙️ Installation & Setup
 1️⃣ Clone the repository
+```bash
 git clone https://github.com/Tejprakash01/django-blog-project.git
-cd django-blog-project
-
 2️⃣ Create virtual environment
 python -m venv venv
-venv\Scripts\activate   # Windows
-# source venv/bin/activate   # Mac/Linux
+source venv/bin/activate   # Linux / Mac
+venv\Scripts\activate      # Windows
 
 3️⃣ Install dependencies
-pip install django djangorestframework
+pip install -r requirements.txt
 
 4️⃣ Run migrations
-python manage.py makemigrations
 python manage.py migrate
 
 5️⃣ Create superuser
 python manage.py createsuperuser
 
-6️⃣ Run server
+6️⃣ Start development server
 python manage.py runserver
 
 
-Open browser:
+Open: http://127.0.0.1:8000/
+source venv/bin/activate   # Linux / Mac
+venv\Scripts\activate      # Windows
+🧪 API Endpoints (Sample)
+GET    /api/posts/
+POST   /api/posts/
+GET    /api/posts/<id>/
 
-http://127.0.0.1:8000/
 
-🔐 Environment Settings
+Supports JSON responses and can be extended for frontend or mobile apps.
 
-Key settings in settings.py:
+🔒 Authentication Flow
 
-STATIC_URL = "/static/"
-MEDIA_URL = "/media/"
-LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "login"
+Login required for creating/editing posts
 
-🔄 API Endpoints (Sample)
-Method	Endpoint	Description
-GET	/api/posts/	List posts
-POST	/api/posts/	Create post
-POST	/like/<id>/	Like/Unlike post
-🌙 Dark Mode
+Users can only modify their own posts
 
-Toggle button available in navbar
+Secure logout & profile access
 
-Uses CSS variables
+🖼️ Image Upload Handling
 
-Persists UI preference per session
+Uses Cloudinary for persistent media storage
 
-📸 Media Handling
+No dependency on local filesystem
 
-Image uploads supported
+Images served via Cloudinary CDN
 
-Stored in /media/
+✔️ Fully production-safe
+✔️ Works on free Render tier
 
-Served in development via Django
+✅ Deployment Notes (Render)
 
-✅ Future Improvements
+Python version pinned via runtime.txt
 
-AJAX likes (no reload)
+Build command:
+
+pip install -r requirements.txt && python manage.py collectstatic --noinput
+
+
+Start command:
+
+gunicorn blog_project.wsgi:application🧠 Lessons Learned
+
+Production Django settings
+
+Debugging 500 errors on deployment
+
+Handling media in cloud environments
+
+Environment-based configuration
+
+Real-world deployment workflow
+
+🚧 Future Improvements
+
+Pagination
 
 Comments system
 
-Deployment (Render / Railway)
+Email verification
 
-JWT Authentication for API
+API authentication (JWT)
 
-React / Next.js frontend
+PostgreSQL database
+
+Docker support
