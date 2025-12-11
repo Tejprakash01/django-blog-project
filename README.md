@@ -1,181 +1,193 @@
-# 📝 Django Blog Project
+Django Blog Project (API + UI)
 
-A full-stack **Django Blog Application** with authentication, image uploads, REST API support, dark mode UI, and production deployment on **Render** using **Cloudinary** for media storage.
+A full-stack Django Blog Application with:
 
-🔗 **Live Demo**: https://django-blog-project-pyl.onrender.com
+Django REST Framework API
 
----
+Authentication (Login, Register, Logout)
 
-## 🚀 Features
+PostgreSQL database (Render Cloud)
 
-### ✅ Core Functionality
-- User registration & login
-- Create, edit & delete blog posts
-- Image upload support (Cloudinary)
-- User profile page
-- Admin panel
-- Search posts
-- Like system
-- Authentication-protected routes
+Cloudinary media storage (Images)
 
-### 🎨 UI
-- Clean & modern UI
-- Dark mode toggle
-- Responsive design
+Django Template UI with modern styling
 
-### ⚙️ Backend
-- Django (MTV architecture)
-- Django REST Framework (API ready)
-- Media handling with Cloudinary
-- Secure environment variable usage
+CRUD operations for posts
 
-### 🚀 Deployment
-- Deployed on **Render**
-- Production-ready settings
-- Gunicorn + WhiteNoise
-- Static & media files handled correctly
+Likes, Profiles, Dark Mode
 
----
+Fully deployed on Render
 
-## 🛠️ Tech Stack
+🚀 Live Demo
 
-**Backend**
-- Python 3.12
-- Django 4.2
-- Django REST Framework
-- Gunicorn
+🔗 https://django-blog-project-pvyl.onrender.com
 
-**Frontend**
-- HTML5
-- CSS3
-- JavaScript
+📸 Features
+🔐 Authentication
 
-**Storage & Deployment**
-- Cloudinary (media storage)
-- Render (hosting)
-- SQLite (development DB)
+Register
 
----
+Login
 
-## 📂 Project Structure
+Logout
 
-django_blog_api_project/
+Redirect to login when unauthorized
+
+✍️ Blog
+
+Create, edit, delete posts
+
+Upload images (Cloudinary)
+
+Styled blog UI with search
+
+❤️ Interactions
+
+Like posts
+
+User profiles
+
+⚙️ Backend API
+
+Django REST Framework
+
+Token-ready endpoints
+
+☁️ Deployment Architecture
+
+Render Web Service → App server
+
+PostgreSQL Cloud DB → Persistent storage
+
+Cloudinary → Media hosting (images)
+
+Gunicorn + WhiteNoise → Production optimized
+
+🛠️ Tech Stack
+Component	Technology
+Backend	Django, Django REST Framework
+Database	PostgreSQL (Render Cloud)
+Media Storage	Cloudinary
+Frontend	Django Templates, HTML/CSS
+Deployment	Render
+Server	Gunicorn
+Static Files	WhiteNoise
+📂 Project Structure
+project/
 │
-├── api/ # REST API
-├── blog/ # Blog app
-│ ├── models.py
-│ ├── views.py
-│ ├── forms.py
-│ ├── urls.py
+├── api/                # DRF API
+├── blog/               # Templates + UI + Views
+├── blog_project/       # Settings, URLs, WSGI
 │
-├── blog_project/ # Project settings
-│ ├── settings.py
-│ ├── urls.py
-│ ├── wsgi.py
-│
-├── static/ # CSS & static files
-├── templates/ # HTML templates
-├── media/ # Local uploads (dev only)
+├── static/             # CSS files
+├── media/              # Cloudinary-managed
 │
 ├── requirements.txt
-├── runtime.txt
+├── runtime.txt         # Python version
 ├── manage.py
 └── README.md
----
 
-## ⚙️ Environment Variables
+🧰 Environment Variables (Render)
 
-Set the following environment variables in **Render** (or `.env` locally):
+Make sure to add these in Render ➝ Environment:
+
+Cloudinary
+CLOUDINARY_CLOUD_NAME=xxxx
+CLOUDINARY_API_KEY=xxxx
+CLOUDINARY_API_SECRET=xxxx
+
+PostgreSQL (Render Database)
+DB_NAME=render_db_name
+DB_USER=render_db_user
+DB_PASSWORD=render_db_password
+DB_HOST=render_db_host
+DB_PORT=5432
+
+Render Flag
+RENDER=True
 
 
----
+This allows settings.py to auto-switch between Local & Production.
 
-## 📦 Installation (Local Setup)
-
-1️⃣ Clone the repository
-```bash
+⚙️ Local Development Setup
+1️⃣ Clone the project
 git clone https://github.com/Tejprakash01/django-blog-project.git
-2️⃣ Create virtual environment
-python -m venv venv
-source venv/bin/activate   # Linux / Mac
-venv\Scripts\activate      # Windows
+cd django-blog-project
 
-3️⃣ Install dependencies
+2️⃣ Install dependencies
 pip install -r requirements.txt
+
+3️⃣ Add .env file (local)
+DB_NAME=blogdb
+DB_USER=postgres
+DB_PASSWORD=admin
+DB_HOST=localhost
+DB_PORT=5432
 
 4️⃣ Run migrations
 python manage.py migrate
 
-5️⃣ Create superuser
-python manage.py createsuperuser
-
-6️⃣ Start development server
+5️⃣ Start server
 python manage.py runserver
 
+☁️ Deployment Guide (Render)
+1. Create a Web Service
 
-Open: http://127.0.0.1:8000/
-source venv/bin/activate   # Linux / Mac
-venv\Scripts\activate      # Windows
-🧪 API Endpoints (Sample)
-GET    /api/posts/
-POST   /api/posts/
-GET    /api/posts/<id>/
+Connect your GitHub repo
 
+Select Python / Django
 
-Supports JSON responses and can be extended for frontend or mobile apps.
+Add build command:
 
-🔒 Authentication Flow
-
-Login required for creating/editing posts
-
-Users can only modify their own posts
-
-Secure logout & profile access
-
-🖼️ Image Upload Handling
-
-Uses Cloudinary for persistent media storage
-
-No dependency on local filesystem
-
-Images served via Cloudinary CDN
-
-✔️ Fully production-safe
-✔️ Works on free Render tier
-
-✅ Deployment Notes (Render)
-
-Python version pinned via runtime.txt
-
-Build command:
-
-pip install -r requirements.txt && python manage.py collectstatic --noinput
+pip install -r requirements.txt
 
 
-Start command:
+Add start command:
 
-gunicorn blog_project.wsgi:application🧠 Lessons Learned
+gunicorn blog_project.wsgi:application
 
-Production Django settings
+2. Add Environment Variables
 
-Debugging 500 errors on deployment
+Paste all variables listed earlier.
 
-Handling media in cloud environments
+3. Add PostgreSQL Database on Render
 
-Environment-based configuration
+Add new → PostgreSQL
 
-Real-world deployment workflow
+Copy credentials into Render environment variables.
 
-🚧 Future Improvements
+4. Deploy
 
-Pagination
+Render detects new commits automatically.
 
-Comments system
+🖼️ Image Uploads
 
-Email verification
+Images use Cloudinary:
 
-API authentication (JWT)
+No local media needed
 
-PostgreSQL database
+Perfect for Render free tier
 
-Docker support
+Auto optimization
+
+📌 Important Notes
+
+Render free tier sleeps after inactivity (≈50s wake-up delay).
+
+PostgreSQL maintains your data — no resetting.
+
+Cloudinary stores images permanently.
+
+🤝 Contributing
+
+Pull requests are welcome!
+Please open an issue to discuss major changes.
+
+📜 License
+
+This project is open-source under the MIT License.
+
+💬 Author
+
+👨‍💻 Tej Prakash Tak
+GitHub: https://github.com/Tejprakash01
