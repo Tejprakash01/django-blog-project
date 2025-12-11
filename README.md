@@ -1,4 +1,4 @@
-Django Blog Project (API + UI)
+🌐 Django Blog Project
 
 A full-stack Django Blog Application with:
 
