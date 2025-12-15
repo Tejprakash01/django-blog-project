@@ -5,7 +5,7 @@
 
 <div class="container">
 
-  <!-- 🔍 SEARCH -->
+  <!--SEARCH -->
   <form method="get" class="search-bar">
     <input
       type="text"
@@ -16,7 +16,7 @@
     <button type="submit">Search</button>
   </form>
 
-  <!-- ✅ POSTS -->
+  <!--POSTS -->
   <div class="post-list">
 
     {% for post in posts %}
@@ -44,18 +44,62 @@
         {{ post.content|truncatechars:250 }}
       </p>
 
-      <!-- ✅ FOOTER ACTION BAR -->
+      <!-- COMMENTS LIST -->
+      <div class="comments" id="comments-{{ post.id }}">
+      {% for comment in post.comments.all %}
+        <div class="comment" id="comment-{{ comment.id }}">
+
+          <div class="comment-text">
+            <strong>{{ comment.user.username }}</strong>
+            {{ comment.text }}
+          </div>
+
+          {% if user == comment.user %}
+            <button
+              class="comment-delete-btn"
+              data-comment-id="{{ comment.id }}"
+              title="Delete comment">
+              ✖
+            </button>
+          {% endif %}
+
+        </div>
+      {% empty %}
+        <p class="no-comments">No comments yet.</p>
+      {% endfor %}
+    </div>
+
+
+      <!--ADD COMMENT -->
+      {% if user.is_authenticated %}
+      <form class="comment-form" data-post-id="{{ post.id }}">
+      {% csrf_token %}
+        <input
+          type="text"
+          name="text"
+          placeholder="Add a comment..."
+          required
+        >
+        <button type="submit">Post</button>
+      </form>
+      {% else %}
+        <p class="login-to-comment">
+          <a href="{% url 'login' %}">Login</a> to comment
+        </p>
+      {% endif %}
+
+      <!--FOOTER ACTION BAR -->
       <div class="post-footer">
 
-        <!-- ❤️ LIKE (LEFT) -->
-        <form method="post" action="{% url 'like_post' post.id %}">
-          {% csrf_token %}
-          <button type="submit" class="like-btn">
-            ❤️ {{ post.likes.count }}
-          </button>
-        </form>
+        <!--LIKE -->
+        <button
+          class="like-btn"
+          data-post-id="{{ post.id }}"
+        >
+          ❤️ <span id="like-count-{{ post.id }}">{{ post.likes.count }}</span>
+        </button>
 
-        <!-- ✏️ EDIT + 🗑️ DELETE (RIGHT) -->
+        <!--EDIT + DELETE -->
         {% if user == post.author %}
         <div class="post-actions">
 
@@ -68,7 +112,8 @@
             <button
               type="submit"
               class="delete-btn"
-              onclick="return confirm('Delete this post?');">
+              onclick="return confirm('Delete this post?');"
+            >
               Delete
             </button>
           </form>
@@ -85,7 +130,7 @@
 
   </div>
 
-  <!-- 📄 PAGINATION -->
+  <!--PAGINATION -->
   {% if posts.has_other_pages %}
   <div class="pagination">
     {% if posts.has_previous %}

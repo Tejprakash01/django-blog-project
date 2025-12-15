@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
     path('api/', include('api.urls')),
+    
 ]
 
 # ✅ SERVE MEDIA FILES IN DEV

@@ -82,10 +82,14 @@ else:
     }
 
 
-
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = []
+STATICFILES_DIRS = [
+    BASE_DIR / "blog" / "static",
+] 
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -100,7 +104,7 @@ LOGOUT_REDIRECT_URL = "login"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ALLOWED_HOSTS = ["*"]
-DEBUG = False
+DEBUG = True   # make it tTrue for local and False for production
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
