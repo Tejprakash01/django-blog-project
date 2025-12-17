@@ -16,12 +16,20 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     
-    'blog.apps.BlogConfig',
+    # api app
+    'blog.apps.BlogConfig', 
     "rest_framework",
     "api",
 
+    #cloudinary apps for media storage
     'cloudinary',
     'cloudinary_storage',
+
+    #channels for real-time features
+    "channels",
+    
+    "chat",
+
 ]
 
 MIDDLEWARE = [
@@ -43,7 +51,7 @@ ROOT_URLCONF = "blog_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [BASE_DIR / 'blog' / 'templates'],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -56,7 +64,22 @@ TEMPLATES = [
     },
 ]
 
+# WSGI_APPLICATION for standard Django
 WSGI_APPLICATION = "blog_project.wsgi.application"
+
+# ASGI_APPLICATION for Channels
+ASGI_APPLICATION = 'django_blog_api_project.asgi.application'
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
 
 if os.getenv("RENDER"):
     DATABASES = {
@@ -104,7 +127,7 @@ LOGOUT_REDIRECT_URL = "login"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 ALLOWED_HOSTS = ["*"]
-DEBUG = True   # make it tTrue for local and False for production
+DEBUG = False   # make it tTrue for local and False for production
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),

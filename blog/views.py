@@ -9,20 +9,17 @@ from django.contrib.auth.models import User
 
 from .models import Post, Comment, Profile
 from .forms import PostForm, CommentForm, ProfileForm, RegisterForm
-
+from chat.models import ChatRequest
 
 def home(request):
-    q = request.GET.get("q", "")
-    posts = Post.objects.filter(
-        Q(title__icontains=q) | Q(content__icontains=q)
-    ).order_by("-created_at")
+    query = request.GET.get("q")
 
-    paginator = Paginator(posts, 5)
-    page = request.GET.get("page")
-    posts = paginator.get_page(page)
+    if query:
+        posts = Post.objects.filter(title__icontains=query)
+    else:
+        posts = Post.objects.all().order_by("-created_at")
 
     return render(request, "blog/home.html", {"posts": posts})
-
 
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)

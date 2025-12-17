@@ -1,0 +1,98 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+<style>
+  #chat-log {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 450px;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .chat-msg {
+    max-width: 60%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    word-wrap: break-word;
+  }
+
+  .chat-me {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+    color: #1f2937;   
+    text-align: right;
+  }
+
+  .chat-other {
+    align-self: flex-start;
+    background-color: #f1f0f0;
+    color: #1f2937;
+    text-align: left;
+  }
+
+  .chat-input-container {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  #chat-message-input {
+    flex: 1;
+    padding: 8px;
+  }
+</style>
+
+<div class="page chat-room">
+  <h2>💬 Chat</h2>
+
+  <div id="chat-log">
+    {% for msg in messages %}
+      <div class="chat-msg {% if msg.sender == request.user %}chat-me{% else %}chat-other{% endif %}">
+        {{ msg.content }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="chat-input-container">
+    <input id="chat-message-input" type="text" placeholder="Type your message...">
+    <button id="chat-message-submit">Send</button>
+  </div>
+</div>
+
+<script>
+const roomId = "{{ room.id }}";
+const currentUser = "{{ request.user.username }}";
+
+const chatSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/chat/' + roomId + '/'
+);
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+
+    const msgDiv = document.createElement("div");
+    msgDiv.classList.add("chat-msg");
+
+    if (data.sender === currentUser) {
+        msgDiv.classList.add("chat-me");
+    } else {
+        msgDiv.classList.add("chat-other");
+    }
+
+    msgDiv.textContent = data.message;
+    document.querySelector("#chat-log").appendChild(msgDiv);
+};
+
+document.querySelector('#chat-message-submit').onclick = function() {
+    const input = document.querySelector('#chat-message-input');
+    if (input.value.trim() !== "") {
+        chatSocket.send(JSON.stringify({ message: input.value }));
+        input.value = '';
+    }
+};
+</script>
+
+{% endblock %}

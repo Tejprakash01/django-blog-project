@@ -1,0 +1,21 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+
+<div class="page">
+  <div class="user-search-form">
+    <form method="get">
+      <input name="q" value="{{ query }}" placeholder="Search username">
+      <button>Search</button>
+    </form>
+  </div>
+
+  {% for user in users %}
+    <div class="user-result">
+      <span class="user-result-name">{{ user.username }}</span>
+      <a href="{% url 'send_chat_request' user.id %}">Send Request</a>
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MyBlog</title>
+    <title>BOCHA</title>
     <link rel="stylesheet" href="{% static 'blog/style.css' %}">
 </head>
 
@@ -10,7 +10,7 @@
 
 <nav class="navbar">
   <div class="nav-left">
-    <a href="{% url 'home' %}" class="logo">MyBlog</a>
+    <a href="{% url 'home' %}" class="logo">BOCHA!</a>
   </div>
 
   <div class="nav-right">
@@ -19,6 +19,14 @@
     {% if user.is_authenticated %}
       <a href="{% url 'create_post' %}" class="btn">New Post</a>
       <a href="{% url 'profile' user.username %}" class="btn secondary">Profile</a>
+
+      <a href="{% url 'chat_inbox' %}" class="btn">
+  💬 Chat
+      </a>
+      <a href="{% url 'chat_search' %}" class="btn secondary">
+      🔍 Find Users 
+      </a>
+
 
       <form method="post" action="{% url 'logout' %}" style="display:inline;">
         {% csrf_token %}
@@ -29,11 +37,6 @@
     {% endif %}
   </div>
 </nav>
-
-
-{% for message in messages %}
-<div class="alert">{{ message }}</div>
-{% endfor %}
 
 <main class="page">
 {% block content %}{% endblock %}

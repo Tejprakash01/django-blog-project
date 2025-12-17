@@ -1,0 +1,55 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Chat Inbox - MyBlog{% endblock %}
+
+{% block content %}
+<div class="page chat-inbox">
+    <h2>💬 Chat Inbox</h2>
+
+    <!-- ================= Requests ================= -->
+    <h3>Requests</h3>
+    {% for r in requests %}
+        <div class="chat-request">
+            <span class="chat-request-user">{{ r.sender.username }}</span>
+            <div class="chat-request-actions">
+                <a href="{% url 'approve_request' r.id %}">Approve</a>
+                <a href="{% url 'reject_request' r.id %}">Reject</a>
+            </div>
+        </div>
+    {% empty %}
+        <p class="empty-state">No pending requests</p>
+    {% endfor %}
+
+    <hr>
+
+    <!-- ================= Chats ================= -->
+    <h3>Your Chats</h3>
+    <div class="chat-list">
+        {% for room in rooms %}
+            <div class="chat-list-item">
+                {% if room.user1 == request.user %}
+                    <a href="{% url 'chat_room' room.id %}">
+                        {{ room.user2.username }}
+                        {% if room.unread_count > 0 %}
+                            <span style="color:red;font-weight:bold">
+                                ({{ room.unread_count }})
+                            </span>
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <a href="{% url 'chat_room' room.id %}">
+                        {{ room.user1.username }}
+                        {% if room.unread_count > 0 %}
+                            <span style="color:red;font-weight:bold">
+                                ({{ room.unread_count }})
+                            </span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p class="empty-state">No chats yet</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Chat - MyBlog{% endblock %}
+
+{% block content %}
+<div class="page chat-room">
+    <h2>💬 Chat</h2>
+
+    <div id="chat-box">
+        {% for msg in messages %}
+            <p><b>{{ msg.sender.username }}:</b> {{ msg.text }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="chat-input-container">
+        <input id="message-input" type="text" placeholder="Type your message..." autocomplete="off">
+        <button id="send-btn">Send</button>
+    </div>
+</div>
+
+<script>
+const roomId = "{{ room.id }}";
+const socket = new WebSocket(
+    "ws://" + window.location.host + "/ws/chat/" + roomId + "/"
+);
+
+socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const chatBox = document.getElementById("chat-box");
+    chatBox.innerHTML += `<p><b>${data.user}:</b> ${data.message}</p>`;
+    // Auto-scroll to bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+};
+
+socket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};
+
+socket.onerror = function(e) {
+    console.error('WebSocket error:', e);
+};
+
+// Focus input on load
+document.getElementById("message-input").focus();
+
+// Send message on Enter key
+document.getElementById("message-input").onkeyup = function(e) {
+    if (e.key === 'Enter') {
+        document.getElementById("send-btn").click();
+    }
+};
+
+// Send message on button click
+document.getElementById("send-btn").onclick = function() {
+    const messageInput = document.getElementById("message-input");
+    const msg = messageInput.value.trim();
+    
+    if (msg !== '') {
+        socket.send(JSON.stringify({ message: msg }));
+        messageInput.value = "";
+    }
+};
+</script>
+{% endblock %}
