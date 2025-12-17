@@ -3,7 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from channels.db import database_sync_to_async
 import json
 
-from .models import Message, Room
+from .models import Message, ChatRoom as Room
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
