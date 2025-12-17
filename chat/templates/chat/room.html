@@ -22,7 +22,7 @@
   .chat-me {
     align-self: flex-end;
     background-color: #dcf8c6;
-    color: #1f2937;   
+    color: #1f2937;
     text-align: right;
   }
 
@@ -64,44 +64,57 @@
 
 <script>
 const roomId = "{{ room.id }}";
+const currentUser = "{{ request.user.username }}";
 
 const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const chatSocket = new WebSocket(
-    protocol + "://" + window.location.host + "/ws/chat/" + roomId + "/"
+  `${protocol}://${window.location.host}/ws/chat/${roomId}/`
 );
 
-chatSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    const chatLog = document.querySelector("#chat-log");
-
-    const msg = document.createElement("div");
-    msg.className = data.sender === "{{ request.user.username }}" ? "msg right" : "msg left";
-    msg.innerHTML = `<strong>${data.sender}</strong>: ${data.message}`;
-
-    chatLog.appendChild(msg);
-    chatLog.scrollTop = chatLog.scrollHeight;
+chatSocket.onopen = () => {
+  console.log("✅ WebSocket connected");
 };
 
-chatSocket.onclose = function() {
-    console.error("WebSocket closed");
+chatSocket.onmessage = function (e) {
+  const data = JSON.parse(e.data);
+  const chatLog = document.getElementById("chat-log");
+
+  const msgDiv = document.createElement("div");
+  msgDiv.classList.add("chat-msg");
+
+  if (data.user === currentUser) {
+    msgDiv.classList.add("chat-me");
+  } else {
+    msgDiv.classList.add("chat-other");
+  }
+
+  msgDiv.textContent = data.message;
+
+  chatLog.appendChild(msgDiv);
+  chatLog.scrollTop = chatLog.scrollHeight;
 };
 
-document.querySelector("#chat-message-submit").onclick = function() {
-    const input = document.querySelector("#chat-message-input");
-    if (input.value.trim()) {
-        chatSocket.send(JSON.stringify({
-            message: input.value
-        }));
-        input.value = "";
-    }
+chatSocket.onclose = function () {
+  console.error("❌ WebSocket closed");
 };
 
-document.querySelector("#chat-message-input").addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-        document.querySelector("#chat-message-submit").click();
-    }
+document.getElementById("chat-message-submit").onclick = function () {
+  const input = document.getElementById("chat-message-input");
+  const message = input.value.trim();
+
+  if (message !== "") {
+    chatSocket.send(JSON.stringify({
+      message: message
+    }));
+    input.value = "";
+  }
+};
+
+document.getElementById("chat-message-input").addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    document.getElementById("chat-message-submit").click();
+  }
 });
-
 </script>
 
 {% endblock %}
