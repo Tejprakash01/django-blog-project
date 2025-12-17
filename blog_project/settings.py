@@ -126,7 +126,7 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-ALLOWED_HOSTS = [ "django-blog-project-pvyl.onrender.com",]
+ALLOWED_HOSTS = ["*"]
 DEBUG = False   # make it tTrue for local and False for production
 
 CLOUDINARY_STORAGE = {
