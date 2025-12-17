@@ -1,193 +1,208 @@
-🌐 Django Blog Project
+# 📝 Django Blog Project with Real-Time Chat (BOCHA)
 
-A full-stack Django Blog Application with:
+A full-stack Django web application featuring a blogging platform with user authentication and **real-time private chat** using **Django Channels + WebSockets + Redis**.
 
-Django REST Framework API
+Deployed on **Render** with PostgreSQL and Redis.
 
-Authentication (Login, Register, Logout)
+---
 
-PostgreSQL database (Render Cloud)
+## 🚀 Live Demo
 
-Cloudinary media storage (Images)
+**👉 [https://django-blog-project-pyvl.onrender.com](https://django-blog-project-pyvl.onrender.com)**
 
-Django Template UI with modern styling
+---
 
-CRUD operations for posts
+## ✨ Features
 
-Likes, Profiles, Dark Mode
+### 🔐 Authentication
+- User registration & login
+- Secure logout (CSRF protected)
+- Profile pages
 
-Fully deployed on Render
+### 📰 Blog
+- Create, edit, delete posts
+- Comment system
+- User-based permissions
 
-🚀 Live Demo
+### 💬 Real-Time Chat
+- One-to-one private chat
+- Chat request & approval system
+- Real-time messaging using WebSockets
+- Message persistence in database
+- No page reload required
 
-🔗 https://django-blog-project-pvyl.onrender.com
+### 🌙 UI
+- Light / Dark mode
+- Clean, responsive layout
 
-📸 Features
-🔐 Authentication
+---
 
-Register
+## 🛠 Tech Stack
 
-Login
+| Layer | Technology |
+|-------|------------|
+| **Backend** | Django |
+| **API** | Django REST Framework |
+| **Realtime** | Django Channels |
+| **WebSockets** | Daphne |
+| **Message Broker** | Redis |
+| **Database** | PostgreSQL |
+| **Static Files** | WhiteNoise |
+| **Media Storage** | Cloudinary |
+| **Frontend** | HTML, CSS, JavaScript |
+| **Deployment** | Render |
 
-Logout
+---
 
-Redirect to login when unauthorized
+## 📁 Project Structure
 
-✍️ Blog
-
-Create, edit, delete posts
-
-Upload images (Cloudinary)
-
-Styled blog UI with search
-
-❤️ Interactions
-
-Like posts
-
-User profiles
-
-⚙️ Backend API
-
-Django REST Framework
-
-Token-ready endpoints
-
-☁️ Deployment Architecture
-
-Render Web Service → App server
-
-PostgreSQL Cloud DB → Persistent storage
-
-Cloudinary → Media hosting (images)
-
-Gunicorn + WhiteNoise → Production optimized
-
-🛠️ Tech Stack
-Component	Technology
-Backend	Django, Django REST Framework
-Database	PostgreSQL (Render Cloud)
-Media Storage	Cloudinary
-Frontend	Django Templates, HTML/CSS
-Deployment	Render
-Server	Gunicorn
-Static Files	WhiteNoise
-📂 Project Structure
-project/
+```
+django-blog-project/
 │
-├── api/                # DRF API
-├── blog/               # Templates + UI + Views
-├── blog_project/       # Settings, URLs, WSGI
+├── blog/                    # Blog app
+├── chat/                    # Chat app (Channels)
+├── api/                     # REST APIs
+├── blog_project/            # Main project config
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
 │
-├── static/             # CSS files
-├── media/              # Cloudinary-managed
-│
+├── static/                  # Static files
+├── templates/               # HTML templates
 ├── requirements.txt
-├── runtime.txt         # Python version
-├── manage.py
 └── README.md
+```
 
-🧰 Environment Variables (Render)
+---
 
-Make sure to add these in Render ➝ Environment:
+## ⚙️ Environment Variables (Render)
 
-Cloudinary
+Set these in **Render → Environment**:
+
+```env
+SECRET_KEY=your-secret-key
+DEBUG=False
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=********
+DB_HOST=********
+DB_PORT=5432
+REDIS_URL=redis://red-xxxxx:6379
 CLOUDINARY_CLOUD_NAME=xxxx
 CLOUDINARY_API_KEY=xxxx
 CLOUDINARY_API_SECRET=xxxx
+RENDER=true
+```
 
-PostgreSQL (Render Database)
-DB_NAME=render_db_name
-DB_USER=render_db_user
-DB_PASSWORD=render_db_password
-DB_HOST=render_db_host
-DB_PORT=5432
+---
 
-Render Flag
-RENDER=True
+## 🧩 Local Setup (Development)
 
-
-This allows settings.py to auto-switch between Local & Production.
-
-⚙️ Local Development Setup
-1️⃣ Clone the project
+### 1️⃣ Clone the repository
+```bash
 git clone https://github.com/Tejprakash01/django-blog-project.git
 cd django-blog-project
+```
 
-2️⃣ Install dependencies
+### 2️⃣ Create virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+```
+
+### 3️⃣ Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
-3️⃣ Add .env file (local)
-DB_NAME=blogdb
-DB_USER=postgres
-DB_PASSWORD=admin
-DB_HOST=localhost
-DB_PORT=5432
-
-4️⃣ Run migrations
+### 4️⃣ Run migrations
+```bash
 python manage.py migrate
+```
 
-5️⃣ Start server
+### 5️⃣ Create superuser
+```bash
+python manage.py createsuperuser
+```
+
+### 6️⃣ Start Redis (Required for Chat)
+```bash
+redis-server
+```
+
+### 7️⃣ Run server
+```bash
 python manage.py runserver
+```
 
-☁️ Deployment Guide (Render)
-1. Create a Web Service
+**Open 👉 [http://127.0.0.1:8000](http://127.0.0.1:8000)**
 
-Connect your GitHub repo
+---
 
-Select Python / Django
+## 🔌 WebSocket Architecture
 
-Add build command:
+- **Protocol:** `ws://` (local) / `wss://` (production)
+- **Consumer:** `ChatConsumer`
+- **Channel Layer:** Redis
+- **ASGI Server:** Daphne
 
-pip install -r requirements.txt
+```
+Client (Browser)
+      ↓ WebSocket
+Daphne (ASGI)
+      ↓
+   Channels
+      ↓
+    Redis
+```
+
+---
+
+## 🧠 Chat Models
+
+```python
+ChatRequest  # Request & approval system
+ChatRoom     # One-to-one room
+Message      # Persistent messages
+```
+
+---
+
+## 🔐 Security
+
+- ✅ CSRF protection enabled
+- ✅ Secure cookies
+- ✅ AuthMiddlewareStack for WebSockets
+- ✅ Allowed hosts restricted
+- ✅ HTTPS + WSS in production
+
+---
+
+## 📦 Deployment Notes (Render)
+
+- Uses **Daphne**, not Gunicorn
+- **Redis is mandatory** for chat
+- **PostgreSQL** for production DB
+- Static files served via **WhiteNoise**
+
+---
+
+## 🧑‍💻 Author
+
+**Tej Prakash Tak**
+
+**GitHub:** [@Tejprakash01](https://github.com/Tejprakash01)
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
 
 
-Add start command:
+---
 
-gunicorn blog_project.wsgi:application
+## ⭐ Show your support
 
-2. Add Environment Variables
-
-Paste all variables listed earlier.
-
-3. Add PostgreSQL Database on Render
-
-Add new → PostgreSQL
-
-Copy credentials into Render environment variables.
-
-4. Deploy
-
-Render detects new commits automatically.
-
-🖼️ Image Uploads
-
-Images use Cloudinary:
-
-No local media needed
-
-Perfect for Render free tier
-
-Auto optimization
-
-📌 Important Notes
-
-Render free tier sleeps after inactivity (≈50s wake-up delay).
-
-PostgreSQL maintains your data — no resetting.
-
-Cloudinary stores images permanently.
-
-🤝 Contributing
-
-Pull requests are welcome!
-Please open an issue to discuss major changes.
-
-📜 License
-
-This project is open-source under the MIT License.
-
-💬 Author
-
-👨‍💻 Tej Prakash Tak
-GitHub: https://github.com/Tejprakash01
+Give a ⭐️ if this project helped you!
