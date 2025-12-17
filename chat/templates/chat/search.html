@@ -1,19 +1,22 @@
 {% extends "blog/base.html" %}
 {% block content %}
 
-
 <div class="page">
   <div class="user-search-form">
     <form method="get">
       <input name="q" value="{{ query }}" placeholder="Search username">
-      <button>Search</button>
+      <button type="submit">Search</button>
     </form>
   </div>
 
   {% for user in users %}
     <div class="user-result">
       <span class="user-result-name">{{ user.username }}</span>
-      <a href="{% url 'send_chat_request' user.id %}">Send Request</a>
+
+      <form method="post" action="{% url 'send_chat_request' user.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Send Request</button>
+      </form>
     </div>
   {% endfor %}
 </div>
