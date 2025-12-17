@@ -20,45 +20,53 @@
 
 <script>
 const roomId = "{{ room.id }}";
+
+// Auto-detect ws / wss
+const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 const socket = new WebSocket(
-    "ws://" + window.location.host + "/ws/chat/" + roomId + "/"
+    `${protocol}://${window.location.host}/ws/chat/${roomId}/`
 );
+
+const chatBox = document.getElementById("chat-box");
+const messageInput = document.getElementById("message-input");
+const sendBtn = document.getElementById("send-btn");
+
+socket.onopen = function () {
+    console.log("✅ WebSocket connected");
+};
 
 socket.onmessage = function(e) {
     const data = JSON.parse(e.data);
-    const chatBox = document.getElementById("chat-box");
-    chatBox.innerHTML += `<p><b>${data.user}:</b> ${data.message}</p>`;
-    // Auto-scroll to bottom
+
+    chatBox.innerHTML += `<p><b>${data.username}:</b> ${data.message}</p>`;
     chatBox.scrollTop = chatBox.scrollHeight;
 };
 
-socket.onclose = function(e) {
-    console.error('Chat socket closed unexpectedly');
+socket.onerror = function(e) {
+    console.error("❌ WebSocket error", e);
 };
 
-socket.onerror = function(e) {
-    console.error('WebSocket error:', e);
+socket.onclose = function() {
+    console.warn("⚠️ WebSocket closed");
 };
 
 // Focus input on load
-document.getElementById("message-input").focus();
+messageInput.focus();
 
-// Send message on Enter key
-document.getElementById("message-input").onkeyup = function(e) {
-    if (e.key === 'Enter') {
-        document.getElementById("send-btn").click();
-    }
-};
+// Enter key sends message
+messageInput.addEventListener("keyup", function(e) {
+    if (e.key === "Enter") sendMessage();
+});
 
-// Send message on button click
-document.getElementById("send-btn").onclick = function() {
-    const messageInput = document.getElementById("message-input");
+sendBtn.onclick = sendMessage;
+
+function sendMessage() {
     const msg = messageInput.value.trim();
-    
-    if (msg !== '') {
-        socket.send(JSON.stringify({ message: msg }));
-        messageInput.value = "";
-    }
-};
+    if (!msg) return;
+
+    socket.send(JSON.stringify({ message: msg }));
+    messageInput.value = "";
+}
 </script>
+
 {% endblock %}
