@@ -82,7 +82,7 @@ chatSocket.onmessage = function (e) {
   const msgDiv = document.createElement("div");
   msgDiv.classList.add("chat-msg");
 
-  if (data.user === currentUser) {
+  if (data.sender === currentUser) {
     msgDiv.classList.add("chat-me");
   } else {
     msgDiv.classList.add("chat-other");
@@ -103,9 +103,7 @@ document.getElementById("chat-message-submit").onclick = function () {
   const message = input.value.trim();
 
   if (message !== "") {
-    chatSocket.send(JSON.stringify({
-      message: message
-    }));
+    chatSocket.send(JSON.stringify({ message }));
     input.value = "";
   }
 };

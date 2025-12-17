@@ -1,18 +1,16 @@
-import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth.models import User
-from .models import ChatRoom, Message
+from django.contrib.auth.models import AnonymousUser
 from channels.db import database_sync_to_async
-from django.utils.timezone import localtime
-from asgiref.sync import sync_to_async
+import json
+
+from .models import Message, Room
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f'chat_{self.room_id}'
-        self.user = self.scope['user']
+        self.room_id = self.scope["url_route"]["kwargs"]["room_id"]
+        self.room_group_name = f"chat_{self.room_id}"
 
-        if not self.user.is_authenticated:
+        if self.scope["user"] == AnonymousUser():
             await self.close()
             return
 
@@ -31,33 +29,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        message = data['message']
+        message = data["message"]
+        user = self.scope["user"]
 
-        # save message
-        msg_obj = await self.save_message(message)
+        msg = await self.save_message(user, message)
 
+        # ✅ SEND TO EVERYONE (INCLUDING SENDER)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'chat_message',
-                'message': msg_obj.content,
-                'sender': self.user.username,
-                'timestamp': localtime(msg_obj.timestamp).strftime("%I:%M %p"),
+                "type": "chat_message",
+                "message": msg.content,
+                "sender": user.username,
             }
         )
 
     async def chat_message(self, event):
         await self.send(text_data=json.dumps({
-            'message': event['message'],
-            'sender': event['sender'],
-            'timestamp': event['timestamp'],
+            "message": event["message"],
+            "sender": event["sender"],
         }))
 
     @database_sync_to_async
-    def save_message(self, content):
-        room = ChatRoom.objects.get(id=self.room_id)
+    def save_message(self, user, content):
+        room = Room.objects.get(id=self.room_id)
         return Message.objects.create(
             room=room,
-            sender=self.user,
+            sender=user,
             content=content
         )
