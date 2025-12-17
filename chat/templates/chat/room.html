@@ -66,9 +66,12 @@
 const roomId = "{{ room.id }}";
 const currentUser = "{{ request.user.username }}";
 
+const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+
 const chatSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/chat/' + roomId + '/'
+    protocol + "://" + window.location.host + "/ws/chat/" + roomId + "/"
 );
+
 
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
@@ -86,13 +89,27 @@ chatSocket.onmessage = function(e) {
     document.querySelector("#chat-log").appendChild(msgDiv);
 };
 
-document.querySelector('#chat-message-submit').onclick = function() {
+document.querySelector('#chat-message-submit').onclick = function (e) {
+    e.preventDefault(); // 🚨 CRITICAL
+
     const input = document.querySelector('#chat-message-input');
-    if (input.value.trim() !== "") {
-        chatSocket.send(JSON.stringify({ message: input.value }));
-        input.value = '';
-    }
+    const message = input.value.trim();
+
+    if (message === "") return;
+
+    chatSocket.send(JSON.stringify({
+        message: message
+    }));
+
+    input.value = "";
 };
+
+document.querySelector("#chat-message-input").addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+        document.querySelector("#chat-message-submit").click();
+    }
+});
+
 </script>
 
 {% endblock %}
