@@ -8,7 +8,7 @@ Deployed on **Render** with PostgreSQL and Redis.
 
 ## 🚀 Live Demo
 
-**👉 [https://django-blog-project-pyvl.onrender.com](https://django-blog-project-pyvl.onrender.com)**
+**👉 https://django-blog-project-pvyl.onrender.com/
 
 ---
 
