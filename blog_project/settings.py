@@ -3,9 +3,9 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "dev-secret-key-change-me"
-
-DEBUG = False
+# SECURITY
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     "django-blog-project-pyvl.onrender.com",
@@ -14,7 +14,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
 ]
 
-
+# APPS
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -22,43 +22,43 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
-    # api app
-    'blog.apps.BlogConfig', 
-    "rest_framework",
+
+    # Blog + API
+    "blog.apps.BlogConfig",
     "api",
+    "rest_framework",
 
-    #cloudinary apps for media storage
-    'cloudinary',
-    'cloudinary_storage',
+    # Media
+    "cloudinary",
+    "cloudinary_storage",
 
-    #channels for real-time features
+    # Realtime
     "channels",
-    
     "chat",
-
 ]
+
+
+# MIDDLEWARE 
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-
 ]
 
 
+# URL / TEMPLATE
 ROOT_URLCONF = "blog_project.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR / 'blog' / 'templates'],
+        "DIRS": [BASE_DIR / "blog" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -71,23 +71,12 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION for standard Django
+
+# WSGI / ASGI
 WSGI_APPLICATION = "blog_project.wsgi.application"
+ASGI_APPLICATION = "blog_project.asgi.application"   
 
-# ASGI_APPLICATION for Channels
-ASGI_APPLICATION = 'django_blog_api_project.asgi.application'
-
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [os.environ.get("REDIS_URL")],
-        },
-    },
-}
-
-
+# DATABASE
 if os.getenv("RENDER"):
     DATABASES = {
         "default": {
@@ -101,36 +90,50 @@ if os.getenv("RENDER"):
     }
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'blogdb',
-            'USER': 'postgres',
-            'PASSWORD': 'admin',
-            'HOST': 'localhost',
-            'PORT': '5432',
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "blogdb",
+            "USER": "postgres",
+            "PASSWORD": "admin",
+            "HOST": "localhost",
+            "PORT": "5432",
         }
     }
 
 
-STATIC_URL = "static/"
+# CHANNELS / REDIS
+REDIS_URL = os.environ.get("REDIS_URL")
+
+if REDIS_URL:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [REDIS_URL],
+            },
+        }
+    }
+else:
+    # Local fallback (NO REDIS REQUIRED)
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        }
+    }
+
+
+# STATIC FILES
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STATICFILES_DIRS = [
     BASE_DIR / "blog" / "static",
-] 
-
-#LOGIN_URL = '/login/'
-#LOGIN_REDIRECT_URL = '/'
-#LOGOUT_REDIRECT_URL = '/login/'
-
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# Login / logout redirects
-LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "login"
+]
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+
+# MEDIA (CLOUDINARY)
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -140,6 +143,18 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
+
+# AUTH
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "login"
+
+
+# CSRF
 CSRF_TRUSTED_ORIGINS = [
     "https://django-blog-project-pyvl.onrender.com",
 ]
+
+
+# DEFAULT
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
