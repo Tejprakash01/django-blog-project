@@ -4,9 +4,16 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "dev-secret-key-change-me"
-DEBUG = True
 
-ALLOWED_HOSTS = []  # add your domain in production
+DEBUG = False
+
+ALLOWED_HOSTS = [
+    "django-blog-project-pyvl.onrender.com",
+    ".onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
+
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -81,7 +88,6 @@ CHANNEL_LAYERS = {
 }
 
 
-
 if os.getenv("RENDER"):
     DATABASES = {
         "default": {
@@ -108,12 +114,9 @@ else:
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = []
 STATICFILES_DIRS = [
     BASE_DIR / "blog" / "static",
 ] 
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
 
 #LOGIN_URL = '/login/'
 #LOGIN_REDIRECT_URL = '/'
@@ -127,13 +130,7 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "login"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-ALLOWED_HOSTS = [
-    "django-blog-project-pyvl.onrender.com",
-    ".onrender.com",
-    "localhost",
-]
 
-DEBUG = False   # make it tTrue for local and False for production
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -144,5 +141,5 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://django-blog-project-pvyl.onrender.com",
+    "https://django-blog-project-pyvl.onrender.com",
 ]
