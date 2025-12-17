@@ -196,13 +196,6 @@ Message      # Persistent messages
 
 ---
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
-
----
-
 ## ⭐ Show your support
 
 Give a ⭐️ if this project helped you!
