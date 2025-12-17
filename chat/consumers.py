@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .models import ChatRoom, Message
 from channels.db import database_sync_to_async
 from django.utils.timezone import localtime
-
+from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
