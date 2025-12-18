@@ -46,6 +46,18 @@
                         {% endif %}
                     </a>
                 {% endif %}
+
+                <!-- 🔴 Delete Chat Button (ADDED) -->
+                <form method="post"
+                      action="{% url 'delete_chat_room' room.id %}"
+                      style="display:inline;margin-left:10px;">
+                    {% csrf_token %}
+                    <button type="submit"
+                            style="background:none;border:none;color:red;cursor:pointer;">
+                        ❌
+                    </button>
+                </form>
+
             </div>
         {% empty %}
             <p class="empty-state">No chats yet</p>

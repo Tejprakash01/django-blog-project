@@ -8,4 +8,6 @@ urlpatterns = [
     path("reject/<int:req_id>/", views.reject_request, name="reject_request"),
     path("inbox/", views.chat_inbox, name="chat_inbox"),
     path("room/<int:room_id>/", views.chat_room, name="chat_room"),
+    path("delete/<int:room_id>/", views.delete_chat_room, name="delete_chat_room"),
+
 ]
