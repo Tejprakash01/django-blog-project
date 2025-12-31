@@ -34,7 +34,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         msg = await self.save_message(user, message)
 
-        # ✅ SEND TO EVERYONE (INCLUDING SENDER)
+        # SEND TO EVERYONE (INCLUDING SENDER)
         await self.channel_layer.group_send(
             self.room_group_name,
             {
