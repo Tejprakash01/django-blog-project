@@ -6,12 +6,13 @@ User = get_user_model()
 
 
 class Command(BaseCommand):
-    help = "Create superuser automatically on Render (no email)"
+    help = "Create superuser automatically (Render free compatible, no email)"
 
     def handle(self, *args, **kwargs):
         username = os.getenv("DJANGO_SUPERUSER_USERNAME")
         password = os.getenv("DJANGO_SUPERUSER_PASSWORD")
 
+        # If env variables are missing, do nothing
         if not username or not password:
             self.stdout.write("Superuser env variables not set")
             return
@@ -20,6 +21,7 @@ class Command(BaseCommand):
             self.stdout.write("Superuser already exists")
             return
 
+        # Create superuser
         User.objects.create_superuser(
             username=username,
             password=password

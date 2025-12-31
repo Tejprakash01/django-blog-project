@@ -175,7 +175,3 @@ CSRF_TRUSTED_ORIGINS = [
 
 # DEFAULT
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-# AUTOMATIC SUPERUSER CREATION ON RENDER
-if os.getenv("RENDER") == "true":
-    os.system("python manage.py create_superuser")
